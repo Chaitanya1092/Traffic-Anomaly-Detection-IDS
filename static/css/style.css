@@ -110,6 +110,87 @@ body {
     letter-spacing: 0.5px;
 }
 
+.logout-button {
+    width: 100%;
+    padding: 0.7rem 0.8rem;
+    color: var(--text-secondary);
+    background: transparent;
+    border: 1px solid var(--border-glass);
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font: inherit;
+}
+
+.logout-button:hover {
+    color: var(--text-primary);
+    border-color: var(--border-focus);
+}
+
+.login-page {
+    align-items: center;
+    justify-content: center;
+    padding: 1.5rem;
+}
+
+.login-card {
+    width: min(100%, 400px);
+    padding: 2rem;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-glass);
+    border-radius: 1rem;
+}
+
+.login-brand {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-bottom: 0.75rem;
+    color: var(--accent-cyan);
+}
+
+.login-brand h1 {
+    color: var(--text-primary);
+    font-family: 'Outfit', sans-serif;
+}
+
+.login-card > p {
+    margin-bottom: 1.5rem;
+    color: var(--text-secondary);
+    line-height: 1.5;
+}
+
+.login-card label {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.login-card input {
+    width: 100%;
+    padding: 0.75rem;
+    color: var(--text-primary);
+    background: var(--bg-primary);
+    border: 1px solid var(--border-glass);
+    border-radius: 0.5rem;
+    font: inherit;
+}
+
+.login-card button {
+    width: 100%;
+    margin-top: 1rem;
+    padding: 0.75rem;
+    color: white;
+    background: var(--accent-blue);
+    border: 0;
+    border-radius: 0.5rem;
+    cursor: pointer;
+    font: inherit;
+}
+
+.login-error {
+    margin-bottom: 1rem;
+    color: var(--sev-critical);
+}
+
 .nav-links {
     list-style: none;
     display: flex;

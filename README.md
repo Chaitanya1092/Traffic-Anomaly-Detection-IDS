@@ -133,6 +133,25 @@ Once launched, open your web browser and navigate to:
 http://127.0.0.1:5000
 ```
 
+The dashboard requires a password. Before starting the app, set `IDS_WEB_PASSWORD` to a unique password of at least 16 characters. On Windows PowerShell, set it in the same Administrator window used to run the app:
+
+```powershell
+$env:IDS_WEB_PASSWORD = "replace-with-a-long-random-password"
+python app.py
+```
+
+### Temporary Public Access from Windows
+
+To share the live dashboard over the internet, install [Cloudflare Tunnel](https://developers.cloudflare.com/cloudflare-one/connections/connect-networks/downloads/) and run this in a separate PowerShell window:
+
+```powershell
+cloudflared tunnel --url http://127.0.0.1:5000
+```
+
+Open the generated `https://....trycloudflare.com` URL and sign in with the password configured above. Keep both the IDS and tunnel running, and keep the PC powered on. The temporary link changes when the tunnel restarts. The app captures traffic visible to this Windows PC; it does not monitor a cloud host or networks the PC cannot see. Share the access password only with intended viewers.
+
+The web server listens only on localhost; use the tunnel rather than exposing port 5000 directly. Do not remove the login or share the password publicly.
+
 ---
 
 ## Security & Resource Controls

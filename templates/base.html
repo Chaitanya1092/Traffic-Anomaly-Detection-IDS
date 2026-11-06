@@ -71,6 +71,9 @@
                 <div class="widget-title" style="margin-top: 1rem; margin-bottom: 0.25rem;">Captured Packets</div>
                 <div id="sidebar-packets" style="font-family: 'Outfit'; font-weight: 700; color: #fff; font-size: 1.1rem;">0</div>
             </div>
+            <form action="{{ url_for('logout') }}" method="post">
+                <button class="logout-button" type="submit">Sign out</button>
+            </form>
         </aside>
         
         <!-- Main Content Area -->

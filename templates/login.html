@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign in | Aegis IDS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body class="login-page">
+    <main class="login-card">
+        <div class="login-brand">
+            <i class="fa-solid fa-shield-halved"></i>
+            <h1>Aegis IDS</h1>
+        </div>
+        <p>Sign in to view the network monitoring dashboard.</p>
+        {% if error %}
+        <div class="login-error" role="alert">{{ error }}</div>
+        {% endif %}
+        <form method="post">
+            <label for="password">Access password</label>
+            <input id="password" name="password" type="password" autocomplete="current-password" required autofocus>
+            <button type="submit">Sign in</button>
+        </form>
+    </main>
+</body>
+</html>

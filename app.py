@@ -2,7 +2,8 @@ import os
 import time
 import threading
 import logging
-from flask import Flask, render_template, jsonify, request, Response
+import hmac
+from flask import Flask, render_template, jsonify, request, Response, redirect, session, url_for
 
 from config import ConfigManager
 from database.db_manager import DBManager
@@ -23,6 +24,12 @@ from detectors import (
 
 app = Flask(__name__)
 app.secret_key = os.urandom(24)
+app.config.update(
+    SESSION_COOKIE_HTTPONLY=True,
+    SESSION_COOKIE_SAMESITE="Lax",
+    SESSION_COOKIE_SECURE=True,
+)
+web_password = os.environ.get("IDS_WEB_PASSWORD", "")
 
 config_mgr = ConfigManager()
 db_mgr = DBManager()
@@ -37,6 +44,40 @@ stop_capture_event = threading.Event()
 
 detectors = []
 ml_detector = None
+
+
+@app.before_request
+def require_login():
+    if request.endpoint in {"login", "static"}:
+        return None
+    if not session.get("authenticated"):
+        if request.path.startswith("/api/"):
+            return jsonify({"error": "Authentication required"}), 401
+        return redirect(url_for("login"))
+    return None
+
+
+@app.route("/login", methods=["GET", "POST"])
+def login():
+    if not web_password:
+        return "Set IDS_WEB_PASSWORD before starting the IDS.", 503
+    if session.get("authenticated"):
+        return redirect(url_for("index"))
+    if request.method == "POST":
+        supplied_password = request.form.get("password", "")
+        if hmac.compare_digest(supplied_password.encode("utf-8"), web_password.encode("utf-8")):
+            session.clear()
+            session["authenticated"] = True
+            return redirect(url_for("index"))
+        return render_template("login.html", error="Incorrect password."), 401
+    return render_template("login.html")
+
+
+@app.route("/logout", methods=["POST"])
+def logout():
+    session.clear()
+    return redirect(url_for("login"))
+
 
 def packet_callback(packet):
     """Callback function executed for every sniffed network packet."""
@@ -368,7 +409,11 @@ def get_logs():
 
 
 if __name__ == "__main__":
-   
+    if len(web_password) < 16:
+        raise SystemExit("Set IDS_WEB_PASSWORD to a password of at least 16 characters before starting.")
+
+    from waitress import serve
+
     start_capture_engine()
 
-    app.run(host="0.0.0.0", port=5000, debug=False, use_reloader=False)
+    serve(app, host="127.0.0.1", port=5000)
