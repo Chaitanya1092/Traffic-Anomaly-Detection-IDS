@@ -1,0 +1,34 @@
+[
+  {
+    "device_label": "Demo Workstation",
+    "hostname": "workstation.demo.invalid",
+    "ip_address": "192.0.2.18",
+    "is_whitelisted": 0,
+    "last_seen": "Sample data",
+    "mac_address": "02:00:00:00:00:01"
+  },
+  {
+    "device_label": "Demo Gateway",
+    "hostname": "gateway.demo.invalid",
+    "ip_address": "192.0.2.1",
+    "is_whitelisted": 1,
+    "last_seen": "Sample data",
+    "mac_address": "02:00:00:00:00:02"
+  },
+  {
+    "device_label": "Demo Server",
+    "hostname": "server.demo.invalid",
+    "ip_address": "198.51.100.10",
+    "is_whitelisted": 0,
+    "last_seen": "Sample data",
+    "mac_address": "02:00:00:00:00:03"
+  },
+  {
+    "device_label": "Demo Sensor",
+    "hostname": "sensor.demo.invalid",
+    "ip_address": "192.0.2.42",
+    "is_whitelisted": 0,
+    "last_seen": "Sample data",
+    "mac_address": "02:00:00:00:00:04"
+  }
+]

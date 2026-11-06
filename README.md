@@ -154,19 +154,25 @@ The web server listens only on localhost; use the tunnel rather than exposing po
 
 ### Public Read-only Sample Demo
 
-For an anonymous project-review link, run the separate demo app using fictional sample data. It does not import the live IDS, read its database, or expose network-capture or settings endpoints:
+The persistent, no-password project-review demo is hosted by GitHub Pages and does not depend on your PC:
+
+**https://chaitanya1092.github.io/Traffic-Anomaly-Detection-IDS/**
+
+It uses fictional sample data, is read-only, and does not import the live IDS or read its database. To regenerate the static site after changing the demo:
 
 ```powershell
-python public_demo.py
+python build_public_site.py
 ```
 
-In another terminal, create a temporary HTTPS link:
+The generated site in `docs/` is published from the `main` branch. For local preview, you can still run the Flask demo with `python public_demo.py` and open `http://127.0.0.1:5001`.
+
+The separate real IDS dashboard is not part of this public demo. If you need a temporary link to the live capture app, use Cloudflare Tunnel:
 
 ```powershell
-cloudflared tunnel --url http://127.0.0.1:5001
+cloudflared tunnel --url http://127.0.0.1:5000
 ```
 
-Share the generated `https://....trycloudflare.com` link. The demo has no login, is read-only, and clearly labels its data as fictional. Keep the live capture app on its password-protected port 5000.
+That live dashboard remains password-protected and depends on the computer running the IDS.
 
 ---
 

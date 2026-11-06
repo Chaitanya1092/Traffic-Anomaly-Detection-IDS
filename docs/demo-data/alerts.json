@@ -1,0 +1,68 @@
+[
+  {
+    "alert_type": "Port Scan",
+    "description": "Demo: repeated connections to 24 unique ports in 10 seconds.",
+    "dest_ip": "198.51.100.10",
+    "id": 6,
+    "minutes_ago": 2,
+    "resolved": 0,
+    "severity": "High",
+    "source_ip": "192.0.2.25",
+    "timestamp": "2026-11-06 10:28:54"
+  },
+  {
+    "alert_type": "Traffic Spike",
+    "description": "Demo: traffic reached 235 packets/sec, above the sample threshold.",
+    "dest_ip": "198.51.100.20",
+    "id": 5,
+    "minutes_ago": 7,
+    "resolved": 0,
+    "severity": "Medium",
+    "source_ip": "192.0.2.42",
+    "timestamp": "2026-11-06 10:23:54"
+  },
+  {
+    "alert_type": "DNS Anomaly",
+    "description": "Demo: 48 DNS queries observed within the sample 10-second window.",
+    "dest_ip": "198.51.100.53",
+    "id": 4,
+    "minutes_ago": 13,
+    "resolved": 0,
+    "severity": "Medium",
+    "source_ip": "192.0.2.18",
+    "timestamp": "2026-11-06 10:17:54"
+  },
+  {
+    "alert_type": "New Device",
+    "description": "Demo: a previously unseen device joined the sample network.",
+    "dest_ip": "N/A",
+    "id": 3,
+    "minutes_ago": 26,
+    "resolved": 1,
+    "severity": "Low",
+    "source_ip": "192.0.2.63",
+    "timestamp": "2026-11-06 10:04:54"
+  },
+  {
+    "alert_type": "ARP Spoofing",
+    "description": "Demo: sample gateway IP was advertised by an unexpected device.",
+    "dest_ip": "192.0.2.1",
+    "id": 2,
+    "minutes_ago": 41,
+    "resolved": 1,
+    "severity": "Critical",
+    "source_ip": "192.0.2.77",
+    "timestamp": "2026-11-06 09:49:54"
+  },
+  {
+    "alert_type": "ICMP Flood",
+    "description": "Demo: ICMP packet rate briefly exceeded the sample threshold.",
+    "dest_ip": "198.51.100.30",
+    "id": 1,
+    "minutes_ago": 58,
+    "resolved": 1,
+    "severity": "Low",
+    "source_ip": "192.0.2.91",
+    "timestamp": "2026-11-06 09:32:54"
+  }
+]

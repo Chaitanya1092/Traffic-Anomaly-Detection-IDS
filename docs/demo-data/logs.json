@@ -1,0 +1,30 @@
+[
+  {
+    "component": "DemoCapture",
+    "log_level": "INFO",
+    "message": "Sample packet stream initialized.",
+    "minutes_ago": 1,
+    "timestamp": "2026-11-06 10:29:54"
+  },
+  {
+    "component": "PortScanDetector",
+    "log_level": "WARNING",
+    "message": "Sample port-scan threshold exceeded.",
+    "minutes_ago": 2,
+    "timestamp": "2026-11-06 10:28:54"
+  },
+  {
+    "component": "TrafficSpikeDetector",
+    "log_level": "INFO",
+    "message": "Sample traffic rate returned below threshold.",
+    "minutes_ago": 5,
+    "timestamp": "2026-11-06 10:25:54"
+  },
+  {
+    "component": "DNSAnomalyDetector",
+    "log_level": "INFO",
+    "message": "Sample DNS query window evaluated.",
+    "minutes_ago": 13,
+    "timestamp": "2026-11-06 10:17:54"
+  }
+]

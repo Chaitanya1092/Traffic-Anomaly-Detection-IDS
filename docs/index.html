@@ -1,0 +1,207 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity Network IDS Dashboard</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="./static/css/style.css">
+</head>
+<body data-read-only="true" data-static-demo="true" data-base-path="./">
+    <div class="app-container">
+        
+        <div class="demo-banner">
+            <strong>PUBLIC DEMO — SAMPLE DATA ONLY</strong>
+            <span>All traffic, devices, addresses, alerts, and counts are fictional. This demo is read-only.</span>
+        </div>
+        
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-shield-halved brand-icon"></i>
+                <span class="brand-name">Aegis IDS</span>
+            </div>
+            
+            <ul class="nav-links">
+                <li class="nav-item active">
+                    <a href="./index.html">
+                        <i class="fa-solid fa-gauge"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="./alerts.html">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Alerts</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="./stats.html">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Traffic Statistics</span>
+                    </a>
+                </li>
+                <li class="nav-item ">
+                    <a href="./devices.html">
+                        <i class="fa-solid fa-laptop-code"></i>
+                        <span>Devices Inventory</span>
+                    </a>
+                </li>
+                
+            </ul>
+            
+            <!-- Sidebar Status Widget -->
+            <div class="system-status-widget">
+                <div class="widget-title">Demo Status</div>
+                <div class="status-indicator">
+                    <div id="status-dot" class="status-dot"></div>
+                    <span id="status-text">Checking...</span>
+                </div>
+                <div class="widget-title" style="margin-top: 1rem; margin-bottom: 0.25rem;">Captured Packets</div>
+                <div id="sidebar-packets" style="font-family: 'Outfit'; font-weight: 700; color: #fff; font-size: 1.1rem;">0</div>
+            </div>
+            
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content has-demo-banner">
+            
+<div class="header">
+    <div>
+        <h1 class="page-title">Security Dashboard</h1>
+        <div class="page-subtitle">Interactive preview of Aegis IDS using fictional network traffic</div>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+        <a href="./alerts.html" class="btn btn-outline">
+            <i class="fa-solid fa-bell"></i> View Alerts
+        </a>
+        <button class="btn btn-primary" onclick="window.location.reload();">
+            <i class="fa-solid fa-arrows-rotate"></i> Refresh
+        </button>
+    </div>
+</div>
+
+<!-- Key Performance Cards Grid -->
+<div class="stats-grid">
+    <div class="stat-card packets">
+        <div class="stat-left">
+            <span class="stat-label">Total Sniffed Packets</span>
+            <span id="card-captured" class="stat-value">0</span>
+        </div>
+        <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-network-wired"></i>
+        </div>
+    </div>
+    
+    <div class="stat-card devices">
+        <div class="stat-left">
+            <span class="stat-label">Active Network Devices</span>
+            <span id="card-devices" class="stat-value">0</span>
+        </div>
+        <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-laptop-house"></i>
+        </div>
+    </div>
+    
+    <div class="stat-card alerts">
+        <div class="stat-left">
+            <span class="stat-label">Unresolved Alerts</span>
+            <span id="card-alerts" class="stat-value">0</span>
+        </div>
+        <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Real-time Charts & Analytics -->
+<div class="dashboard-grid">
+    <!-- Traffic Rates Line Graph -->
+    <div class="panel-card" style="margin-bottom: 0;">
+        <div class="panel-header">
+            <h2 class="panel-title"><i class="fa-solid fa-chart-area"></i> Sample Network Activity</h2>
+            <span class="badge resolved"><i class="fa-solid fa-circle-play"></i> Sample Data</span>
+        </div>
+        <div class="chart-container">
+            <canvas id="trafficChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- Protocol Share Donut -->
+    <div class="panel-card" style="margin-bottom: 0;">
+        <div class="panel-header">
+            <h2 class="panel-title"><i class="fa-solid fa-chart-pie"></i> Protocol Breakdown</h2>
+        </div>
+        <div class="chart-container">
+            <canvas id="protoChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Alerts Table and Target Rankings -->
+<div class="dashboard-grid" style="grid-template-columns: 2fr 1fr;">
+    <!-- Recent Alerts -->
+    <div class="panel-card">
+        <div class="panel-header">
+            <h2 class="panel-title"><i class="fa-solid fa-skull-crossbones"></i> Recent Security Anomalies</h2>
+            <a href="./alerts.html" class="btn btn-outline btn-sm">Manage Alerts</a>
+        </div>
+        <div class="table-wrapper">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">Severity</th>
+                        <th style="width: 20%;">Alert Type</th>
+                        <th style="width: 20%;">Source IP</th>
+                        <th style="width: 35%;">Description</th>
+                        <th style="width: 15%;">Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="dashboard-alerts-body">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem 0;">
+                            <i class="fa-solid fa-spinner fa-spin"></i> Loading security metrics...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Top Sources / Destinations -->
+    <div class="panel-card">
+        <div class="panel-header" style="margin-bottom: 1.5rem;">
+            <h2 class="panel-title"><i class="fa-solid fa-fire"></i> Alert Risk Profiles</h2>
+        </div>
+        
+        <div class="widget-title">Top Source IP Offenders</div>
+        <ul id="top-sources-list" class="simple-list" style="margin-bottom: 2rem;">
+            <li style="text-align: center; color: var(--text-muted); padding: 0.5rem 0;">Loading stats...</li>
+        </ul>
+        
+        <div class="widget-title">Top Targeted Destination IPs</div>
+        <ul id="top-dests-list" class="simple-list">
+            <li style="text-align: center; color: var(--text-muted); padding: 0.5rem 0;">Loading stats...</li>
+        </ul>
+    </div>
+</div>
+
+        </main>
+    </div>
+    
+    <!-- Custom JS File -->
+    <script src="./static/js/dashboard.js"></script>
+</body>
+</html>

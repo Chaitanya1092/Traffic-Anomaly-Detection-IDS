@@ -10,7 +10,7 @@ document.addEventListener("DOMContentLoaded", () => {
     initStatusWidget();
 
     // Route page-specific logic
-    if (path === "/" || path.endsWith("dashboard.html")) {
+    if (path === "/" || path.endsWith("/") || path.endsWith("index.html") || path.endsWith("dashboard.html")) {
         initDashboard();
     } else if (path === "/alerts" || path.endsWith("alerts.html")) {
         initAlertsPage();
@@ -23,6 +23,69 @@ document.addEventListener("DOMContentLoaded", () => {
     }
 });
 
+function apiFetch(url, options) {
+    if (document.body.dataset.staticDemo !== "true") {
+        return fetch(url, options);
+    }
+
+    if (options && options.method && options.method.toUpperCase() !== "GET") {
+        return Promise.reject(new Error("The public sample demo is read-only."));
+    }
+
+    const requestUrl = new URL(url, window.location.href);
+    const files = {
+        "/api/status": "status.json",
+        "/api/stats": "stats.json",
+        "/api/alerts": "alerts.json",
+        "/api/logs": "logs.json",
+        "/api/devices": "devices.json"
+    };
+    const file = files[requestUrl.pathname];
+    if (!file) {
+        return Promise.reject(new Error("This endpoint is unavailable in the public sample demo."));
+    }
+
+    const basePath = document.body.dataset.basePath || "./";
+    return fetch(`${basePath}demo-data/${file}`)
+        .then(response => {
+            if (!response.ok) {
+                throw new Error(`Failed to load public sample data (${response.status}).`);
+            }
+            return response.json();
+        })
+        .then(data => {
+            let result = data;
+            if (requestUrl.pathname !== "/api/alerts") {
+                if (requestUrl.pathname === "/api/logs") {
+                    result = data.slice(0, Math.min(Number(requestUrl.searchParams.get("limit")) || 50, 50));
+                } else if (requestUrl.pathname === "/api/stats") {
+                    const limit = Math.min(Number(requestUrl.searchParams.get("limit")) || 60, 120);
+                    result = {
+                        ...data,
+                        timeline: data.timeline.slice(-limit),
+                        pps: data.pps.slice(-limit),
+                        kbps: data.kbps.slice(-limit)
+                    };
+                }
+            } else {
+                const severity = requestUrl.searchParams.get("severity");
+                const resolved = requestUrl.searchParams.get("resolved");
+                const offset = Math.max(Number(requestUrl.searchParams.get("offset")) || 0, 0);
+                const limit = Math.min(Number(requestUrl.searchParams.get("limit")) || 100, 100);
+                const filtered = data.filter(alert => {
+                    const severityMatches = !severity || alert.severity === severity;
+                    const resolvedMatches = resolved === null
+                        || Boolean(alert.resolved) === (resolved === "true");
+                    return severityMatches && resolvedMatches;
+                });
+                result = filtered.slice(offset, offset + limit);
+            }
+            return new Response(JSON.stringify(result), {
+                headers: { "Content-Type": "application/json" }
+            });
+        });
+}
+
 // --- GLOBAL SYSTEM STATUS WIDGET ---
 function initStatusWidget() {
     const statusDot = document.getElementById("status-dot");
@@ -30,7 +93,7 @@ function initStatusWidget() {
     const packetCountSidebar = document.getElementById("sidebar-packets");
 
     function pollStatus() {
-        fetch("/api/status")
+        apiFetch("/api/status")
             .then(res => res.json())
             .then(data => {
                 // Update status indicator
@@ -162,7 +225,7 @@ function initDashboard() {
     // 2. Poll statistics
     function updateStats() {
         // Main cards
-        fetch("/api/status")
+        apiFetch("/api/status")
             .then(res => res.json())
             .then(data => {
                 if (cardCaptured) cardCaptured.textContent = data.total_packets.toLocaleString();
@@ -223,7 +286,7 @@ function initDashboard() {
             });
 
         // Graph data
-        fetch("/api/stats?limit=40")
+        apiFetch("/api/stats?limit=40")
             .then(res => res.json())
             .then(data => {
                 if (trafficChart) {
@@ -264,7 +327,7 @@ function initAlertsPage() {
             url += `&resolved=${resolved}`;
         }
 
-        fetch(url)
+        apiFetch(url)
             .then(res => res.json())
             .then(data => {
                 if (data.length === 0) {
@@ -400,7 +463,7 @@ function initStatsPage() {
     }
 
     function loadStatsHistory() {
-        fetch("/api/stats?limit=120")
+        apiFetch("/api/stats?limit=120")
             .then(res => res.json())
             .then(data => {
                 if (trafficSpikeChart) {
@@ -414,7 +477,7 @@ function initStatsPage() {
 
     function loadLogs() {
         if (!logsBody) return;
-        fetch("/api/logs?limit=40")
+        apiFetch("/api/logs?limit=40")
             .then(res => res.json())
             .then(data => {
                 if (data.length === 0) {
@@ -452,7 +515,7 @@ function initDevicesPage() {
     const devicesBody = document.getElementById("devices-table-body");
 
     function loadDevices() {
-        fetch("/api/devices")
+        apiFetch("/api/devices")
             .then(res => res.json())
             .then(data => {
                 if (data.length === 0) {
