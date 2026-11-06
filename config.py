@@ -1,6 +1,7 @@
 import os
 import json
 import logging
+from copy import deepcopy
 
 class ConfigManager:
     DEFAULT_CONFIG = {
@@ -51,7 +52,7 @@ class ConfigManager:
         """Load configurations from file or create a default if not found."""
         if not os.path.exists(self.config_path):
             os.makedirs(os.path.dirname(self.config_path), exist_ok=True)
-            self.config = self.DEFAULT_CONFIG.copy()
+            self.config = deepcopy(self.DEFAULT_CONFIG)
             self.save()
             return
 
@@ -61,13 +62,13 @@ class ConfigManager:
             self._fill_missing_defaults(self.config, self.DEFAULT_CONFIG)
         except Exception as e:
             logging.error(f"Error loading config from {self.config_path}: {e}. Loading defaults.")
-            self.config = self.DEFAULT_CONFIG.copy()
+            self.config = deepcopy(self.DEFAULT_CONFIG)
 
     def _fill_missing_defaults(self, current, default):
         """Recursively ensure all default keys exist in loaded config."""
         for key, val in default.items():
             if key not in current:
-                current[key] = val
+                current[key] = deepcopy(val)
             elif isinstance(val, dict) and isinstance(current[key], dict):
                 self._fill_missing_defaults(current[key], val)
 
