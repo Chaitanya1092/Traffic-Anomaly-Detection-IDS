@@ -1,0 +1,123 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div>
+        <h1 class="page-title">Security Dashboard</h1>
+        <div class="page-subtitle">Real-time network security monitoring and anomaly detection cockpit</div>
+    </div>
+    <div style="display: flex; gap: 0.75rem;">
+        <a href="{{ url_for('alerts') }}" class="btn btn-outline">
+            <i class="fa-solid fa-bell"></i> View Alerts
+        </a>
+        <button class="btn btn-primary" onclick="window.location.reload();">
+            <i class="fa-solid fa-arrows-rotate"></i> Refresh
+        </button>
+    </div>
+</div>
+
+<!-- Key Performance Cards Grid -->
+<div class="stats-grid">
+    <div class="stat-card packets">
+        <div class="stat-left">
+            <span class="stat-label">Total Sniffed Packets</span>
+            <span id="card-captured" class="stat-value">0</span>
+        </div>
+        <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-network-wired"></i>
+        </div>
+    </div>
+    
+    <div class="stat-card devices">
+        <div class="stat-left">
+            <span class="stat-label">Active Network Devices</span>
+            <span id="card-devices" class="stat-value">0</span>
+        </div>
+        <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-laptop-house"></i>
+        </div>
+    </div>
+    
+    <div class="stat-card alerts">
+        <div class="stat-left">
+            <span class="stat-label">Unresolved Alerts</span>
+            <span id="card-alerts" class="stat-value">0</span>
+        </div>
+        <div class="stat-icon-wrapper">
+            <i class="fa-solid fa-triangle-exclamation"></i>
+        </div>
+    </div>
+</div>
+
+<!-- Real-time Charts & Analytics -->
+<div class="dashboard-grid">
+    <!-- Traffic Rates Line Graph -->
+    <div class="panel-card" style="margin-bottom: 0;">
+        <div class="panel-header">
+            <h2 class="panel-title"><i class="fa-solid fa-chart-area"></i> Live Network Activity</h2>
+            <span class="badge resolved"><i class="fa-solid fa-circle-play"></i> Streaming Live</span>
+        </div>
+        <div class="chart-container">
+            <canvas id="trafficChart"></canvas>
+        </div>
+    </div>
+    
+    <!-- Protocol Share Donut -->
+    <div class="panel-card" style="margin-bottom: 0;">
+        <div class="panel-header">
+            <h2 class="panel-title"><i class="fa-solid fa-chart-pie"></i> Protocol Breakdown</h2>
+        </div>
+        <div class="chart-container">
+            <canvas id="protoChart"></canvas>
+        </div>
+    </div>
+</div>
+
+<!-- Alerts Table and Target Rankings -->
+<div class="dashboard-grid" style="grid-template-columns: 2fr 1fr;">
+    <!-- Recent Alerts -->
+    <div class="panel-card">
+        <div class="panel-header">
+            <h2 class="panel-title"><i class="fa-solid fa-skull-crossbones"></i> Recent Security Anomalies</h2>
+            <a href="{{ url_for('alerts') }}" class="btn btn-outline btn-sm">Manage Alerts</a>
+        </div>
+        <div class="table-wrapper">
+            <table class="custom-table">
+                <thead>
+                    <tr>
+                        <th style="width: 10%;">Severity</th>
+                        <th style="width: 20%;">Alert Type</th>
+                        <th style="width: 20%;">Source IP</th>
+                        <th style="width: 35%;">Description</th>
+                        <th style="width: 15%;">Timestamp</th>
+                    </tr>
+                </thead>
+                <tbody id="dashboard-alerts-body">
+                    <tr>
+                        <td colspan="5" style="text-align: center; color: var(--text-muted); padding: 1.5rem 0;">
+                            <i class="fa-solid fa-spinner fa-spin"></i> Loading security metrics...
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+    
+    <!-- Top Sources / Destinations -->
+    <div class="panel-card">
+        <div class="panel-header" style="margin-bottom: 1.5rem;">
+            <h2 class="panel-title"><i class="fa-solid fa-fire"></i> Alert Risk Profiles</h2>
+        </div>
+        
+        <div class="widget-title">Top Source IP Offenders</div>
+        <ul id="top-sources-list" class="simple-list" style="margin-bottom: 2rem;">
+            <li style="text-align: center; color: var(--text-muted); padding: 0.5rem 0;">Loading stats...</li>
+        </ul>
+        
+        <div class="widget-title">Top Targeted Destination IPs</div>
+        <ul id="top-dests-list" class="simple-list">
+            <li style="text-align: center; color: var(--text-muted); padding: 0.5rem 0;">Loading stats...</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

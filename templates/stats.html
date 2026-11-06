@@ -1,0 +1,53 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div>
+        <h1 class="page-title">Traffic Statistics</h1>
+        <div class="page-subtitle">Deep dive into bandwidth timeline statistics and system operations telemetry</div>
+    </div>
+    <div>
+        <button class="btn btn-outline" onclick="window.location.reload();">
+            <i class="fa-solid fa-arrows-rotate"></i> Refresh Data
+        </button>
+    </div>
+</div>
+
+<!-- Full Width Network Activity Timeline -->
+<div class="panel-card" style="margin-bottom: 2rem;">
+    <div class="panel-header">
+        <h2 class="panel-title"><i class="fa-solid fa-chart-line"></i> Network Throughput Timeline (Last 2 Minutes)</h2>
+        <span class="badge resolved"><i class="fa-solid fa-clock"></i> 1s Sampling Interval</span>
+    </div>
+    <div class="chart-container" style="height: 350px;">
+        <canvas id="fullTrafficChart"></canvas>
+    </div>
+</div>
+
+<!-- System Operations Logs -->
+<div class="panel-card">
+    <div class="panel-header">
+        <h2 class="panel-title"><i class="fa-solid fa-terminal"></i> System Operations & Detection Logs</h2>
+        <span class="badge resolved"><i class="fa-solid fa-circle-check"></i> Live Telemetry</span>
+    </div>
+    <div class="table-wrapper" style="max-height: 400px; overflow-y: auto;">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th style="width: 10%;">Level</th>
+                    <th style="width: 15%;">Component</th>
+                    <th style="width: 60%;">Message</th>
+                    <th style="width: 15%;">Timestamp</th>
+                </tr>
+            </thead>
+            <tbody id="logs-table-body">
+                <tr>
+                    <td colspan="4" style="text-align: center; color: var(--text-muted); padding: 2rem 0;">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Fetching telemetry logs...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

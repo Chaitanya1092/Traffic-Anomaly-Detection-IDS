@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div>
+        <h1 class="page-title">Devices Inventory</h1>
+        <div class="page-subtitle">Track, label, and manage whitelists for all hosts discovered on the network</div>
+    </div>
+    <div>
+        <button class="btn btn-outline" onclick="window.location.reload();">
+            <i class="fa-solid fa-arrows-rotate"></i> Scan Refresh
+        </button>
+    </div>
+</div>
+
+<div class="panel-card">
+    <div class="panel-header">
+        <h2 class="panel-title"><i class="fa-solid fa-laptop-code"></i> Discovered Network Host Registry</h2>
+        <span class="text-secondary" style="font-size: 0.85rem;">Whitelisting a device bypasses alerts (e.g. port scan, dns flood) for that host</span>
+    </div>
+    
+    <div class="table-wrapper">
+        <table class="custom-table">
+            <thead>
+                <tr>
+                    <th style="width: 20%;">Device Label</th>
+                    <th style="width: 20%;">MAC Address</th>
+                    <th style="width: 15%;">Last Observed IP</th>
+                    <th style="width: 20%;">Resolved Hostname</th>
+                    <th style="width: 15%;">Last Active</th>
+                    <th style="width: 10%; text-align: right;">Authorization Status</th>
+                </tr>
+            </thead>
+            <tbody id="devices-table-body">
+                <tr>
+                    <td colspan="6" style="text-align: center; color: var(--text-muted); padding: 3rem 0;">
+                        <i class="fa-solid fa-spinner fa-spin"></i> Building local host registry...
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

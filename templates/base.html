@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Antigravity Network IDS Dashboard</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    
+    <!-- Custom Style Sheet -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation -->
+        <aside class="sidebar">
+            <div class="brand">
+                <i class="fa-solid fa-shield-halved brand-icon"></i>
+                <span class="brand-name">Aegis IDS</span>
+            </div>
+            
+            <ul class="nav-links">
+                <li class="nav-item {% if active_page == 'dashboard' %}active{% endif %}">
+                    <a href="{{ url_for('index') }}">
+                        <i class="fa-solid fa-gauge"></i>
+                        <span>Dashboard</span>
+                    </a>
+                </li>
+                <li class="nav-item {% if active_page == 'alerts' %}active{% endif %}">
+                    <a href="{{ url_for('alerts') }}">
+                        <i class="fa-solid fa-triangle-exclamation"></i>
+                        <span>Alerts</span>
+                    </a>
+                </li>
+                <li class="nav-item {% if active_page == 'stats' %}active{% endif %}">
+                    <a href="{{ url_for('stats') }}">
+                        <i class="fa-solid fa-chart-line"></i>
+                        <span>Traffic Statistics</span>
+                    </a>
+                </li>
+                <li class="nav-item {% if active_page == 'devices' %}active{% endif %}">
+                    <a href="{{ url_for('devices') }}">
+                        <i class="fa-solid fa-laptop-code"></i>
+                        <span>Devices Inventory</span>
+                    </a>
+                </li>
+                <li class="nav-item {% if active_page == 'rules' %}active{% endif %}">
+                    <a href="{{ url_for('rules') }}">
+                        <i class="fa-solid fa-sliders"></i>
+                        <span>Detection Rules</span>
+                    </a>
+                </li>
+            </ul>
+            
+            <!-- Sidebar Status Widget -->
+            <div class="system-status-widget">
+                <div class="widget-title">Engine Status</div>
+                <div class="status-indicator">
+                    <div id="status-dot" class="status-dot"></div>
+                    <span id="status-text">Checking...</span>
+                </div>
+                <div class="widget-title" style="margin-top: 1rem; margin-bottom: 0.25rem;">Captured Packets</div>
+                <div id="sidebar-packets" style="font-family: 'Outfit'; font-weight: 700; color: #fff; font-size: 1.1rem;">0</div>
+            </div>
+        </aside>
+        
+        <!-- Main Content Area -->
+        <main class="main-content">
+            {% block content %}{% endblock %}
+        </main>
+    </div>
+    
+    <!-- Custom JS File -->
+    <script src="{{ url_for('static', filename='js/dashboard.js') }}"></script>
+</body>
+</html>

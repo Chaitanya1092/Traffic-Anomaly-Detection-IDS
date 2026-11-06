@@ -1,0 +1,175 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="header">
+    <div>
+        <h1 class="page-title">Detection Rules & Settings</h1>
+        <div class="page-subtitle">Tweak anomaly thresholds, configure Telegram bot alerts, and select network interfaces</div>
+    </div>
+    <div id="save-status-indicator"></div>
+</div>
+
+<form id="rules-config-form" class="config-form">
+    <div class="config-section">
+        <!-- Column 1: Thresholds -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <!-- Traffic Spike Panel -->
+            <div class="panel-card" style="margin-bottom: 0;">
+                <h2 class="panel-title" style="margin-bottom: 1.25rem;">
+                    <i class="fa-solid fa-gauge-high"></i> Traffic Spike Thresholds
+                </h2>
+                
+                <div class="form-group">
+                    <label for="packets_per_sec_limit" class="form-label">Packet Rate Limit (packets/sec)</label>
+                    <input type="number" id="packets_per_sec_limit" name="packets_per_sec_limit" class="form-control" 
+                           value="{{ config.packet_thresholds.packets_per_sec_limit }}" min="1" required>
+                    <span class="form-helper">Alert triggers if traffic rate exceeds this value. Default: 200</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="bandwidth_limit_kbps" class="form-label">Bandwidth Rate Limit (Kbps)</label>
+                    <input type="number" id="bandwidth_limit_kbps" name="bandwidth_limit_kbps" class="form-control" 
+                           value="{{ config.packet_thresholds.bandwidth_limit_kbps }}" min="1" required>
+                    <span class="form-helper">Alert triggers if bandwidth throughput exceeds this value. Default: 2048</span>
+                </div>
+            </div>
+            
+            <!-- Port Scan Panel -->
+            <div class="panel-card" style="margin-bottom: 0;">
+                <h2 class="panel-title" style="margin-bottom: 1.25rem;">
+                    <i class="fa-solid fa-magnifying-glass-chart"></i> Port Scan Thresholds
+                </h2>
+                
+                <div class="form-group">
+                    <label for="max_ports_per_window" class="form-label">Max Unique Ports</label>
+                    <input type="number" id="max_ports_per_window" name="max_ports_per_window" class="form-control" 
+                           value="{{ config.scan_thresholds.max_ports_per_window }}" min="1" required>
+                    <span class="form-helper">Maximum unique destination ports targeted before alert. Default: 20</span>
+                </div>
+                
+                <div class="form-group">
+                    <label for="scan_window_seconds" class="form-label">Scanning Window (seconds)</label>
+                    <input type="number" id="scan_window_seconds" name="scan_window_seconds" class="form-control" 
+                           value="{{ config.scan_thresholds.window_seconds }}" min="1" required>
+                    <span class="form-helper">Time frame to accumulate targeted ports. Default: 10</span>
+                </div>
+            </div>
+
+            <!-- DNS & ICMP Panel -->
+            <div class="panel-card" style="margin-bottom: 0;">
+                <h2 class="panel-title" style="margin-bottom: 1.25rem;">
+                    <i class="fa-solid fa-server"></i> DNS & ICMP Flood Rules
+                </h2>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+                    <div class="form-group">
+                        <label for="max_dns_queries" class="form-label">Max DNS Queries</label>
+                        <input type="number" id="max_dns_queries" name="max_dns_queries" class="form-control" 
+                               value="{{ config.dns_thresholds.max_queries_per_window }}" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="dns_window_seconds" class="form-label">DNS Window (sec)</label>
+                        <input type="number" id="dns_window_seconds" name="dns_window_seconds" class="form-control" 
+                               value="{{ config.dns_thresholds.window_seconds }}" min="1" required>
+                    </div>
+                </div>
+                
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin-top: 0.5rem;">
+                    <div class="form-group">
+                        <label for="max_pings" class="form-label">Max ICMP Packets</label>
+                        <input type="number" id="max_pings" name="max_pings" class="form-control" 
+                               value="{{ config.icmp_thresholds.max_pings_per_window }}" min="1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="icmp_window_seconds" class="form-label">ICMP Window (sec)</label>
+                        <input type="number" id="icmp_window_seconds" name="icmp_window_seconds" class="form-control" 
+                               value="{{ config.icmp_thresholds.window_seconds }}" min="1" required>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Column 2: Interfaces and Alerts -->
+        <div style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <!-- Network Settings -->
+            <div class="panel-card" style="margin-bottom: 0;">
+                <h2 class="panel-title" style="margin-bottom: 1.25rem;">
+                    <i class="fa-solid fa-ethernet"></i> Network Configurations
+                </h2>
+                
+                <div class="form-group">
+                    <label for="interface" class="form-label">Network Interface to Sniff</label>
+                    <select id="interface" name="interface" class="filter-select" style="width: 100%;">
+                        <option value="" {% if config.network_settings.interface == "" %}selected{% endif %}>Auto-Detect (Recommended)</option>
+                        {% for iface in interfaces %}
+                            <option value="{{ iface }}" {% if config.network_settings.interface == iface %}selected{% endif %}>{{ iface }}</option>
+                        {% endfor %}
+                    </select>
+                    <span class="form-helper">Changing the interface restarts the packet capture engine.</span>
+                </div>
+            </div>
+
+            <!-- Telegram Notifications Settings -->
+            <div class="panel-card" style="margin-bottom: 0;">
+                <div class="switch-group" style="margin-bottom: 1rem;">
+                    <h2 class="panel-title" style="margin-bottom: 0;">
+                        <i class="fa-brands fa-telegram"></i> Telegram Dispatch
+                    </h2>
+                    <label class="switch">
+                        <input type="checkbox" id="telegram_enabled" name="telegram_enabled" 
+                               {% if config.notification_settings.telegram_enabled %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label for="telegram_token" class="form-label">Telegram Bot API Token</label>
+                    <input type="text" id="telegram_token" name="telegram_token" class="form-control" 
+                           value="{{ config.notification_settings.telegram_token }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="telegram_chat_id" class="form-label">Telegram Chat ID</label>
+                    <input type="text" id="telegram_chat_id" name="telegram_chat_id" class="form-control" 
+                           value="{{ config.notification_settings.telegram_chat_id }}">
+                </div>
+                
+                <div class="form-group">
+                    <label for="min_severity" class="form-label">Minimum Notification Severity</label>
+                    <select id="min_severity" name="min_severity" class="filter-select" style="width: 100%;">
+                        <option value="Low" {% if config.notification_settings.min_severity == "Low" %}selected{% endif %}>Low (All Alerts)</option>
+                        <option value="Medium" {% if config.notification_settings.min_severity == "Medium" %}selected{% endif %}>Medium & Above</option>
+                        <option value="High" {% if config.notification_settings.min_severity == "High" %}selected{% endif %}>High & Above</option>
+                        <option value="Critical" {% if config.notification_settings.min_severity == "Critical" %}selected{% endif %}>Critical Only</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- Machine Learning Settings -->
+            <div class="panel-card" style="margin-bottom: 0;">
+                <div class="switch-group" style="margin-bottom: 1rem;">
+                    <h2 class="panel-title" style="margin-bottom: 0;">
+                        <i class="fa-solid fa-brain"></i> Machine Learning Detector
+                    </h2>
+                    <label class="switch">
+                        <input type="checkbox" id="ml_enabled" name="ml_enabled" 
+                               {% if config.ml_settings.enabled %}checked{% endif %}>
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                
+                <div class="form-group">
+                    <label for="ml_contamination" class="form-label">Outlier Contamination Rate</label>
+                    <input type="number" id="ml_contamination" name="ml_contamination" class="form-control" 
+                           value="{{ config.ml_settings.contamination }}" step="0.005" min="0.005" max="0.2" required>
+                    <span class="form-helper">Sensibility for Isolation Forest. Higher values classify more traffic patterns as anomalies. Default: 0.02</span>
+                </div>
+            </div>
+            
+            <button type="submit" class="btn btn-primary" style="align-self: flex-end; padding: 0.75rem 2rem;">
+                <i class="fa-solid fa-floppy-disk"></i> Apply & Save Configurations
+            </button>
+        </div>
+    </div>
+</form>
+{% endblock %}
