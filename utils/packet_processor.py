@@ -70,24 +70,22 @@ class PacketProcessor:
                 packet_info["protocol"] = "TCP"
                 packet_info["src_port"] = int(packet[TCP].sport)
                 packet_info["dst_port"] = int(packet[TCP].dport)
-            
             # UDP Layer
             elif packet.haslayer(UDP):
                 packet_info["protocol"] = "UDP"
                 packet_info["src_port"] = int(packet[UDP].sport)
                 packet_info["dst_port"] = int(packet[UDP].dport)
 
-                # DNS checking (often runs over UDP port 53, but could check DNS layer)
-                if packet.haslayer(DNS):
-                    packet_info["is_dns"] = True
-                    packet_info["protocol"] = "DNS"
-                    if packet.haslayer(DNSQR):
-                        qname = packet[DNSQR].qname
-                        if isinstance(qname, bytes):
-                            packet_info["dns_query"] = qname.decode('utf-8', errors='ignore').rstrip('.')
-                        else:
-                            packet_info["dns_query"] = str(qname).rstrip('.')
-                        packet_info["dns_type"] = packet[DNSQR].qtype
+            if packet.haslayer(DNS):
+                packet_info["is_dns"] = True
+                packet_info["protocol"] = "DNS"
+                if packet.haslayer(DNSQR):
+                    qname = packet[DNSQR].qname
+                    if isinstance(qname, bytes):
+                        packet_info["dns_query"] = qname.decode('utf-8', errors='ignore').rstrip('.')
+                    else:
+                        packet_info["dns_query"] = str(qname).rstrip('.')
+                    packet_info["dns_type"] = packet[DNSQR].qtype
 
             # ICMP Layer
             elif packet.haslayer(ICMP):
