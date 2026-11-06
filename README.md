@@ -18,7 +18,7 @@ Aegis IDS is a complete, production-style Network Intrusion Detection System (ID
 - **ARP Spoofing Detection**: Automatically identifies default system gateway; alerts on MAC address changes (Critical) or IP conflicts (High).
 - **New Device Detection**: Detects and logs previously unseen MAC addresses joining the network.
 - **ICMP Flood Detection**: Detects ping flood activity from single source IPs.
-- **Machine Learning Anomaly Detection**: Trains an **Isolation Forest** model (from `scikit-learn`) on historical bandwidth and packet rate statistics, raising alerts for structural traffic deviations.
+- **Statistical Anomaly Detection**: Compares current bandwidth and packet rates with a rolling historical baseline and raises alerts when they exceed a configurable Z-score threshold.
 
 ### 3. Sleek Dark-Mode Dashboard (Flask)
 - **Dashboard**: Key metric cards, recent alert tables, top alert sources, and protocol shares.
@@ -51,7 +51,7 @@ IDS/
 │   ├── arp_spoof.py         # Gateways MAC & IP conflict checks
 │   ├── dns_anomaly.py       # DNS flood checks
 │   ├── icmp_flood.py        # ICMP/ping rate checks
-│   ├── ml_anomaly.py        # Isolation Forest stats outlier engine
+│   ├── ml_anomaly.py        # Historical traffic Z-score anomaly detector
 │   ├── new_device.py        # Device inventory discovery
 │   ├── port_scan.py         # Port scan thresholds evaluator
 │   └── traffic_spike.py     # PPS & Kbps rate evaluator & DB writer
