@@ -4,7 +4,7 @@
 <div class="header">
     <div>
         <h1 class="page-title">Security Dashboard</h1>
-        <div class="page-subtitle">Real-time network security monitoring and anomaly detection cockpit</div>
+        <div class="page-subtitle">{% if public_demo %}Interactive preview of Aegis IDS using fictional network traffic{% else %}Real-time network security monitoring and anomaly detection cockpit{% endif %}</div>
     </div>
     <div style="display: flex; gap: 0.75rem;">
         <a href="{{ url_for('alerts') }}" class="btn btn-outline">
@@ -54,8 +54,8 @@
     <!-- Traffic Rates Line Graph -->
     <div class="panel-card" style="margin-bottom: 0;">
         <div class="panel-header">
-            <h2 class="panel-title"><i class="fa-solid fa-chart-area"></i> Live Network Activity</h2>
-            <span class="badge resolved"><i class="fa-solid fa-circle-play"></i> Streaming Live</span>
+            <h2 class="panel-title"><i class="fa-solid fa-chart-area"></i> {% if public_demo %}Sample Network Activity{% else %}Live Network Activity{% endif %}</h2>
+            <span class="badge resolved"><i class="fa-solid fa-circle-play"></i> {% if public_demo %}Sample Data{% else %}Streaming Live{% endif %}</span>
         </div>
         <div class="chart-container">
             <canvas id="trafficChart"></canvas>

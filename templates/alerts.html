@@ -10,9 +10,11 @@
         <a href="/api/alerts/export" class="btn btn-outline" download>
             <i class="fa-solid fa-file-export"></i> Export CSV
         </a>
+        {% if not read_only %}
         <button id="resolve-all-btn" class="btn btn-primary">
             <i class="fa-solid fa-check-double"></i> Resolve All
         </button>
+        {% endif %}
     </div>
 </div>
 
@@ -57,7 +59,7 @@
                     <th style="width: 15%;">Destination IP</th>
                     <th style="width: 30%;">Description</th>
                     <th style="width: 10%;">Timestamp</th>
-                    <th style="width: 5%; text-align: right;">Action</th>
+                    <th style="width: 5%; text-align: right;">{% if read_only %}Mode{% else %}Action{% endif %}</th>
                 </tr>
             </thead>
             <tbody id="alerts-table-body">

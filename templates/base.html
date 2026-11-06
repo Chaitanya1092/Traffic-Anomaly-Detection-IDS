@@ -19,8 +19,14 @@
     <!-- Custom Style Sheet -->
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
 </head>
-<body>
+<body{% if read_only %} data-read-only="true"{% endif %}>
     <div class="app-container">
+        {% if public_demo %}
+        <div class="demo-banner">
+            <strong>PUBLIC DEMO — SAMPLE DATA ONLY</strong>
+            <span>All traffic, devices, addresses, alerts, and counts are fictional. This demo is read-only.</span>
+        </div>
+        {% endif %}
         <!-- Sidebar Navigation -->
         <aside class="sidebar">
             <div class="brand">
@@ -53,17 +59,19 @@
                         <span>Devices Inventory</span>
                     </a>
                 </li>
+                {% if not public_demo %}
                 <li class="nav-item {% if active_page == 'rules' %}active{% endif %}">
                     <a href="{{ url_for('rules') }}">
                         <i class="fa-solid fa-sliders"></i>
                         <span>Detection Rules</span>
                     </a>
                 </li>
+                {% endif %}
             </ul>
             
             <!-- Sidebar Status Widget -->
             <div class="system-status-widget">
-                <div class="widget-title">Engine Status</div>
+                <div class="widget-title">{% if public_demo %}Demo Status{% else %}Engine Status{% endif %}</div>
                 <div class="status-indicator">
                     <div id="status-dot" class="status-dot"></div>
                     <span id="status-text">Checking...</span>
@@ -71,13 +79,15 @@
                 <div class="widget-title" style="margin-top: 1rem; margin-bottom: 0.25rem;">Captured Packets</div>
                 <div id="sidebar-packets" style="font-family: 'Outfit'; font-weight: 700; color: #fff; font-size: 1.1rem;">0</div>
             </div>
+            {% if not public_demo %}
             <form action="{{ url_for('logout') }}" method="post">
                 <button class="logout-button" type="submit">Sign out</button>
             </form>
+            {% endif %}
         </aside>
         
         <!-- Main Content Area -->
-        <main class="main-content">
+        <main class="main-content{% if public_demo %} has-demo-banner{% endif %}">
             {% block content %}{% endblock %}
         </main>
     </div>

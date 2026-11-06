@@ -4,7 +4,7 @@
 <div class="header">
     <div>
         <h1 class="page-title">Traffic Statistics</h1>
-        <div class="page-subtitle">Deep dive into bandwidth timeline statistics and system operations telemetry</div>
+        <div class="page-subtitle">{% if public_demo %}Explore a fictional sample traffic timeline and detector log{% else %}Deep dive into bandwidth timeline statistics and system operations telemetry{% endif %}</div>
     </div>
     <div>
         <button class="btn btn-outline" onclick="window.location.reload();">
@@ -28,7 +28,7 @@
 <div class="panel-card">
     <div class="panel-header">
         <h2 class="panel-title"><i class="fa-solid fa-terminal"></i> System Operations & Detection Logs</h2>
-        <span class="badge resolved"><i class="fa-solid fa-circle-check"></i> Live Telemetry</span>
+        <span class="badge resolved"><i class="fa-solid fa-circle-check"></i> {% if public_demo %}Sample Logs{% else %}Live Telemetry{% endif %}</span>
     </div>
     <div class="table-wrapper" style="max-height: 400px; overflow-y: auto;">
         <table class="custom-table">

@@ -4,7 +4,7 @@
 <div class="header">
     <div>
         <h1 class="page-title">Devices Inventory</h1>
-        <div class="page-subtitle">Track, label, and manage whitelists for all hosts discovered on the network</div>
+        <div class="page-subtitle">{% if public_demo %}Fictional example devices; real devices are never shown in this public demo{% else %}Track, label, and manage whitelists for all hosts discovered on the network{% endif %}</div>
     </div>
     <div>
         <button class="btn btn-outline" onclick="window.location.reload();">
@@ -16,7 +16,7 @@
 <div class="panel-card">
     <div class="panel-header">
         <h2 class="panel-title"><i class="fa-solid fa-laptop-code"></i> Discovered Network Host Registry</h2>
-        <span class="text-secondary" style="font-size: 0.85rem;">Whitelisting a device bypasses alerts (e.g. port scan, dns flood) for that host</span>
+        <span class="text-secondary" style="font-size: 0.85rem;">{% if public_demo %}Read-only sample inventory{% else %}Whitelisting a device bypasses alerts (e.g. port scan, dns flood) for that host{% endif %}</span>
     </div>
     
     <div class="table-wrapper">
@@ -28,7 +28,7 @@
                     <th style="width: 15%;">Last Observed IP</th>
                     <th style="width: 20%;">Resolved Hostname</th>
                     <th style="width: 15%;">Last Active</th>
-                    <th style="width: 10%; text-align: right;">Authorization Status</th>
+                    <th style="width: 10%; text-align: right;">{% if public_demo %}Demo Status{% else %}Authorization Status{% endif %}</th>
                 </tr>
             </thead>
             <tbody id="devices-table-body">

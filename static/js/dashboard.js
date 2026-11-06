@@ -1,5 +1,7 @@
 // Dashboard Script - Traffic Anomaly Detection System (Network IDS)
 
+const READ_ONLY_DEMO = document.body.dataset.readOnly === "true";
+
 document.addEventListener("DOMContentLoaded", () => {
     // Determine the current page based on body tag classes or pathname
     const path = window.location.pathname;
@@ -35,6 +37,9 @@ function initStatusWidget() {
                 if (data.status === "Active") {
                     statusDot.className = "status-dot active";
                     statusText.textContent = "Monitoring";
+                } else if (data.status === "Demo") {
+                    statusDot.className = "status-dot active";
+                    statusText.textContent = "Sample Data";
                 } else if (data.status === "Error") {
                     statusDot.className = "status-dot error";
                     statusText.textContent = "Capture Error";
@@ -269,7 +274,9 @@ function initAlertsPage() {
 
                 alertsBody.innerHTML = data.map(alert => {
                     const isResolved = alert.resolved === 1;
-                    const actionBtn = isResolved 
+                    const actionBtn = READ_ONLY_DEMO
+                        ? `<span class="badge">Read only</span>`
+                        : isResolved
                         ? `<span class="badge resolved"><i class="fas fa-check"></i> Resolved</span>` 
                         : `<button class="btn btn-outline btn-sm btn-success" onclick="resolveAlert(${alert.id}, this)">Resolve</button>`;
                         
@@ -455,6 +462,19 @@ function initDevicesPage() {
 
                 devicesBody.innerHTML = data.map(device => {
                     const whitelistedChecked = device.is_whitelisted === 1 ? 'checked' : '';
+                    const authorizationStatus = READ_ONLY_DEMO
+                        ? `<span class="badge">Sample</span>`
+                        : `
+                            <div style="display: flex; align-items: center; justify-content: space-between;">
+                                <label class="switch">
+                                    <input type="checkbox" ${whitelistedChecked} onchange="toggleWhitelist('${device.mac_address}', this)">
+                                    <span class="slider"></span>
+                                </label>
+                                <button class="btn btn-outline btn-sm" style="margin-left: 1.5rem;" onclick="renameDevice('${device.mac_address}', '${escapeHtml(device.device_label)}')">
+                                    <i class="fas fa-edit"></i> Label
+                                </button>
+                            </div>
+                        `;
                     return `
                         <tr>
                             <td><strong>${escapeHtml(device.device_label || 'Unnamed Device')}</strong></td>
@@ -462,17 +482,7 @@ function initDevicesPage() {
                             <td><code>${escapeHtml(device.ip_address)}</code></td>
                             <td class="text-secondary">${escapeHtml(device.hostname || 'Unknown')}</td>
                             <td style="color: var(--text-muted); font-size: 0.85rem;">${device.last_seen}</td>
-                            <td>
-                                <div style="display: flex; align-items: center; justify-content: space-between;">
-                                    <label class="switch">
-                                        <input type="checkbox" ${whitelistedChecked} onchange="toggleWhitelist('${device.mac_address}', this)">
-                                        <span class="slider"></span>
-                                    </label>
-                                    <button class="btn btn-outline btn-sm" style="margin-left: 1.5rem;" onclick="renameDevice('${device.mac_address}', '${escapeHtml(device.device_label)}')">
-                                        <i class="fas fa-edit"></i> Label
-                                    </button>
-                                </div>
-                            </td>
+                            <td>${authorizationStatus}</td>
                         </tr>
                     `;
                 }).join('');

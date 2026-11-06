@@ -152,6 +152,22 @@ Open the generated `https://....trycloudflare.com` URL and sign in with the pass
 
 The web server listens only on localhost; use the tunnel rather than exposing port 5000 directly. Do not remove the login or share the password publicly.
 
+### Public Read-only Sample Demo
+
+For an anonymous project-review link, run the separate demo app using fictional sample data. It does not import the live IDS, read its database, or expose network-capture or settings endpoints:
+
+```powershell
+python public_demo.py
+```
+
+In another terminal, create a temporary HTTPS link:
+
+```powershell
+cloudflared tunnel --url http://127.0.0.1:5001
+```
+
+Share the generated `https://....trycloudflare.com` link. The demo has no login, is read-only, and clearly labels its data as fictional. Keep the live capture app on its password-protected port 5000.
+
 ---
 
 ## Security & Resource Controls
