@@ -176,6 +176,18 @@ That live dashboard remains password-protected and depends on the computer runni
 
 ---
 
+## Running Tests
+
+After installing the project dependencies, run the unit tests from the project root:
+
+```powershell
+python -m unittest discover -s tests -v
+```
+
+The tests cover configuration defaults, packet parsing, statistical anomaly detection, and alert CSV export. They do not start live packet capture.
+
+---
+
 ## Security & Resource Controls
 
 - **Authorized Monitoring**: Ensure you only run this tool on networks that you own or are explicitly authorized to audit.
